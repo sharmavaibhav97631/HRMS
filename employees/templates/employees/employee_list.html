@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  /* Header Section */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .page-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--sidebar-color);
+  }
+
+  /* Add Employee Button */
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .btn-primary:hover {
+    background-color: #1d4ed8;
+  }
+
+  /* Table Styling */
+  .table-container {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden; /* Ensures corners stay rounded */
+    border: 1px solid #e2e8f0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+  }
+
+  th {
+    background-color: #f8fafc;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-main);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover {
+    background-color: #fcfdfe;
+  }
+
+  /* Badge/Tag for Department */
+  .dept-tag {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* Action Link */
+  .link-delete {
+    color: #ef4444;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+
+  .link-delete:hover {
+    background-color: #fef2f2;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+  }
+</style>
+
+<div class="page-header">
+  <h2>Employees</h2>
+  <a href="{% url 'employee_create' %}" class="btn-primary">+ Add Employee</a>
+</div>
+
+<div class="table-container">
+  {% if employees %}
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Dept</th>
+        <th style="text-align: right;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in employees %}
+      <tr>
+        <td style="font-weight: 600; color: var(--primary-color);">{{ e.employee_id }}</td>
+        <td>{{ e.full_name }}</td>
+        <td style="color: var(--text-muted);">{{ e.email }}</td>
+        <td><span class="dept-tag">{{ e.department }}</span></td>
+        <td style="text-align: right;">
+          <a href="{% url 'employee_delete' e.id %}" class="link-delete">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <p>No employees found. Start by adding a new team member.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

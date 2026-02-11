@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  /* Local Form Container Styling */
+  .card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--sidebar-color);
+  }
+
+  /* Form Group Spacing */
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+  }
+
+  /* Professional Input Styling */
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    background-color: #fff;
+  }
+
+  input::placeholder {
+    color: #cbd5e1;
+  }
+
+  /* Button Actions Styling */
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  button[type="submit"] {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+  }
+
+  button[type="submit"]:active {
+    transform: translateY(0);
+  }
+
+  .btn-secondary {
+    text-decoration: none;
+    background-color: #f1f5f9;
+    color: var(--text-main);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background-color 0.2s;
+  }
+
+  .btn-secondary:hover {
+    background-color: #e2e8f0;
+  }
+</style>
+
+<div class="card">
+  <h2 class="page-title">Add Employee</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    
+    <div class="form-group">
+      <label for="full_name">Full Name</label>
+      <input type="text" id="full_name" name="full_name" placeholder="John Doe" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" placeholder="john@example.com" required>
+    </div>
+
+    <div class="form-group">
+      <label for="department">Department</label>
+      <input type="text" id="department" name="department" placeholder="Engineering" required>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit">Save Employee</button>
+      <a href="/employees/" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

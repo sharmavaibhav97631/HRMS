@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--sidebar-color);
+  }
+
+  /* Horizontal Quick-Mark Form */
+  .attendance-form-container {
+    background: #ffffff;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+
+  .attendance-form-container h3 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  .mark-form {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .mark-form select, 
+  .mark-form input[type="date"] {
+    flex: 1;
+    min-width: 150px;
+    padding: 0.6rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .mark-form select:focus, 
+  .mark-form input:focus {
+    border-color: var(--primary-color);
+  }
+
+  .btn-submit {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-submit:hover {
+    background-color: #1d4ed8;
+  }
+
+  /* Table Styling */
+  .records-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--text-main);
+  }
+
+  .table-container {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f8fafc;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.95rem;
+  }
+
+  /* Status Pills */
+  .status-pill {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .status-present {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  .status-absent {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  .empty-state {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+</style>
+
+<h2 class="page-title">Attendance Tracking</h2>
+
+<div class="attendance-form-container">
+  <h3>Mark New Attendance</h3>
+  <form method="POST" action="{% url 'mark_attendance' %}" class="mark-form">
+    {% csrf_token %}
+
+    <select name="employee" required>
+      <option value="">Select Employee</option>
+      {% for emp in employees %}
+        <option value="{{ emp.id }}">{{ emp.full_name }}</option>
+      {% endfor %}
+    </select>
+
+    <input type="date" name="date" required value="{% now 'Y-m-d' %}">
+
+    <select name="status" required>
+      <option value="">Status</option>
+      <option value="Present">Present</option>
+      <option value="Absent">Absent</option>
+    </select>
+
+    <button type="submit" class="btn-submit">Submit Record</button>
+  </form>
+</div>
+
+<div class="records-section">
+  <h3>Attendance History</h3>
+  <div class="table-container">
+    {% if records %}
+    <table>
+      <thead>
+        <tr>
+          <th>Employee Name</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td style="font-weight: 500;">{{ r.employee.full_name }}</td>
+          <td style="color: var(--text-muted);">{{ r.date }}</td>
+          <td>
+            <span class="status-pill {% if r.status == 'Present' %}status-present{% else %}status-absent{% endif %}">
+              {{ r.status }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <p>No attendance records found for this period.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
